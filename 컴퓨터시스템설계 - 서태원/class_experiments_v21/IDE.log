@@ -1,0 +1,20 @@
+20:15:14 INFO  : Launching XSCT server: xsct.bat -n  -interactive C:\Users\dlrkd\Downloads\class_experiments_v21\temp_xsdb_launch_script.tcl
+20:15:14 INFO  : Platform repository initialization has completed.
+20:15:14 INFO  : Registering command handlers for Vitis TCF services
+20:15:17 INFO  : XSCT server has started successfully.
+20:15:19 INFO  : plnx-install-location is set to ''
+20:15:19 INFO  : Successfully done setting XSCT server connection channel  
+20:15:19 INFO  : Successfully done query RDI_DATADIR 
+20:15:19 INFO  : Successfully done setting workspace for the tool. 
+20:16:00 INFO  : Result from executing command 'getProjects': csd_platform
+20:16:00 INFO  : Result from executing command 'getPlatforms': 
+20:18:15 INFO  : Result from executing command 'getProjects': csd_platform
+20:18:15 INFO  : Result from executing command 'getPlatforms': csd_platform|C:/Users/dlrkd/Downloads/class_experiments_v21/csd_platform/export/csd_platform/csd_platform.xpfm
+20:19:44 INFO  : Result from executing command 'removePlatformRepo': 
+20:19:55 INFO  : Result from executing command 'getProjects': csd_platform
+20:19:55 INFO  : Result from executing command 'getPlatforms': 
+20:19:55 INFO  : Checking for BSP changes to sync application flags for project 'csd_lap'...
+20:26:14 INFO  : Result from executing command 'removePlatformRepo': 
+20:26:24 INFO  : Result from executing command 'getProjects': csd_platform
+20:26:24 INFO  : Result from executing command 'getPlatforms': 
+20:26:25 INFO  : Checking for BSP changes to sync application flags for project 'csd_lap'...
