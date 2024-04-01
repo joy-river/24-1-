@@ -1,34 +1,34 @@
 
 
-.global main				// ì •ë ¬ì„ ì§„í–‰í•  mainì„ ì „ì—­ìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤
+.global main				// Á¤·ÄÀ» ÁøÇàÇÒ mainÀ» Àü¿ªÀ¸·Î ¼³Á¤ÇÕ´Ï´Ù
 
-main:						// ì •ë ¬ì„ ì‹¤í–‰í•˜ëŠ” main í•¨ìˆ˜ìž…ë‹ˆë‹¤.
-     ldr r0, =Input_data	// r0ë ˆì§€ìŠ¤í„°ì— ìž…ë ¥ ë°ì´í„°ì˜ ì£¼ì†Œë¥¼ ë¶ˆëŸ¬ì˜µë‹ˆë‹¤.
-     ldr r1, =Output_data	// r1ë ˆì§€ìŠ¤í„°ì— ì¶œë ¥ ë°ì´í„°ì˜ ì£¼ì†Œë¥¼ ë¶ˆëŸ¬ì˜µë‹ˆë‹¤.
-     mov r2, #31		    // ì •ë ¬ì„ ìœ„í•œ ë°˜ë³µíšŸìˆ˜ë¥¼ 31íšŒë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
+main:						// Á¤·ÄÀ» ½ÇÇàÇÏ´Â main ÇÔ¼öÀÔ´Ï´Ù.
+     ldr r0, =Input_data	// r0·¹Áö½ºÅÍ¿¡ ÀÔ·Â µ¥ÀÌÅÍÀÇ ÁÖ¼Ò¸¦ ºÒ·¯¿É´Ï´Ù.
+     ldr r1, =Output_data	// r1·¹Áö½ºÅÍ¿¡ Ãâ·Â µ¥ÀÌÅÍÀÇ ÁÖ¼Ò¸¦ ºÒ·¯¿É´Ï´Ù.
+     mov r2, #31		    // Á¤·ÄÀ» À§ÇÑ ¹Ýº¹È½¼ö¸¦ 31È¸·Î ¼³Á¤ÇÕ´Ï´Ù.
 
-Selection_sort_out_loop: 	// ì„ íƒí•œ ì •ë ¬ ì•Œê³ ë¦¬ì¦˜ì€ ì„ íƒì •ë ¬(Selection sort)ë¡œ ì •í–ˆìŠµë‹ˆë‹¤. ë”°ë¼ì„œ ì´ì¤‘ ë°˜ë³µë¬¸ì„ ì‚¬ìš©í–ˆìŠµë‹ˆë‹¤.
-	 ldr r3, [r0], #4   	// r0 ì£¼ì†Œì˜ Input ê°’ì„ í•˜ë‚˜ ê°€ì ¸ì™€ r3ì— ì €ìž¥í•˜ê³ , r0ë¥¼ 4ë”í•œ ê°’ìœ¼ë¡œ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-	 mov r4, r0			 	// ë°°ì—´ ì „ì²´ë¥¼ ìˆœíšŒí•˜ê³  ë¹„êµí•˜ê¸° ìœ„í•´ r4ì— r0ë¥¼ ë³µì‚¬í•©ë‹ˆë‹¤.
-	 mov r5, r2			 	// inner_loop ë°°ì—´ ìˆœíšŒë¥¼ ë°˜ë³µí•  íšŸìˆ˜ë¥¼ r5ì— ì €ìž¥í•©ë‹ˆë‹¤.
+Selection_sort_out_loop: 	// ¼±ÅÃÇÑ Á¤·Ä ¾Ë°í¸®ÁòÀº ¼±ÅÃÁ¤·Ä(Selection sort)·Î Á¤Çß½À´Ï´Ù. µû¶ó¼­ ÀÌÁß ¹Ýº¹¹®À» »ç¿ëÇß½À´Ï´Ù.
+	 ldr r3, [r0], #4   	// r0 ÁÖ¼ÒÀÇ Input °ªÀ» ÇÏ³ª °¡Á®¿Í r3¿¡ ÀúÀåÇÏ°í, r0¸¦ 4´õÇÑ °ªÀ¸·Î ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+	 mov r4, r0			 	// ¹è¿­ ÀüÃ¼¸¦ ¼øÈ¸ÇÏ°í ºñ±³ÇÏ±â À§ÇØ r4¿¡ r0¸¦ º¹»çÇÕ´Ï´Ù.
+	 mov r5, r2			 	// inner_loop ¹è¿­ ¼øÈ¸¸¦ ¹Ýº¹ÇÒ È½¼ö¸¦ r5¿¡ ÀúÀåÇÕ´Ï´Ù.
 
 Selection_sort_inner_loop:
-	 ldr r6, [r4], #4		// r3ì™€ ë¹„êµí•  ë°°ì—´ì˜ r4ìœ„ì¹˜ì˜ ì›ì†Œë¥¼ r6ì— ë¶ˆëŸ¬ì˜µë‹ˆë‹¤. ê·¸ í›„ r4ë¥¼ + 4ë¥¼ ë”í•œ ê°’ìœ¼ë¡œ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-	 cmp r3, r6				// r3ì™€ r6ë¥¼ ë¹„êµí•˜ì—¬ CPSRì„ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-	 strgt r3, [r4, #-4]	// ë§Œì•½ r3ê°€ ë” í¬ë‹¤ë©´, r6ë¥¼ ê°€ì ¸ì™”ë˜ ë©”ëª¨ë¦¬ ì£¼ì†Œ[r4, #-4]ì— r3ë¥¼ ì €ìž¥í•©ë‹ˆë‹¤.
-	 movgt r3, r6			// ë§Œì•½ r3ê°€ ë” í¬ë‹¤ë©´, r6ë¥¼ r3ì— ëŒ€ì‹  ì €ìž¥í•©ë‹ˆë‹¤.
-	 subs r5, r5, #1		// r5ì— 1ì„ ëº€ ê°’ì„ r5ì— ë„£ê³ , CPSRì„ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-     bne Selection_sort_inner_loop	// ë§Œì•½ r5ê°€ 0ì´ ì•„ë‹ˆë¼ë©´, inner_loopë¥¼ ë°˜ë³µí•©ë‹ˆë‹¤.
+	 ldr r6, [r4], #4		// r3¿Í ºñ±³ÇÒ ¹è¿­ÀÇ r4À§Ä¡ÀÇ ¿ø¼Ò¸¦ r6¿¡ ºÒ·¯¿É´Ï´Ù. ±× ÈÄ r4¸¦ + 4¸¦ ´õÇÑ °ªÀ¸·Î ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+	 cmp r3, r6				// r3¿Í r6¸¦ ºñ±³ÇÏ¿© CPSRÀ» ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+	 strgt r3, [r4, #-4]	// ¸¸¾à r3°¡ ´õ Å©´Ù¸é, r6¸¦ °¡Á®¿Ô´ø ¸Þ¸ð¸® ÁÖ¼Ò[r4, #-4]¿¡ r3¸¦ ÀúÀåÇÕ´Ï´Ù.
+	 movgt r3, r6			// ¸¸¾à r3°¡ ´õ Å©´Ù¸é, r6¸¦ r3¿¡ ´ë½Å ÀúÀåÇÕ´Ï´Ù.
+	 subs r5, r5, #1		// r5¿¡ 1À» »« °ªÀ» r5¿¡ ³Ö°í, CPSRÀ» ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+     bne Selection_sort_inner_loop	// ¸¸¾à r5°¡ 0ÀÌ ¾Æ´Ï¶ó¸é, inner_loop¸¦ ¹Ýº¹ÇÕ´Ï´Ù.
 
-	 str r3, [r1], #4    	// í˜„ìž¬ ìˆœíšŒë¥¼ ë°˜ë³µí•œ ë°°ì—´ì—ì„œ ê°€ìž¥ ìž‘ì€ ê°’ì¸ r3ë¥¼ r1 ì£¼ì†Œì— ì €ìž¥í•˜ê³ , r1ì„ 4ë”í•œ ê°’ìœ¼ë¡œ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-	 subs r2, r2, #1		// r2ì— 1ì„ ëº€ ê°’ì„ r2ì— ë„£ê³ , CPSRì„ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
-	 bne Selection_sort_out_loop	// ì•„ì§ r2ê°€ 0ì´ ë˜ì§€ ì•Šì•˜ë‹¤ë©´, out_loopë¥¼ ë‹¤ì‹œ ë°˜ë³µí•©ë‹ˆë‹¤.
-	 ldr r3, [r0]			// ëª¨ë“  ë°˜ë³µì´ ëë‚˜ê³  ìž…ë ¥ ë°°ì—´ì˜ ë§ˆì§€ë§‰ ì›ì†Œ, ì¦‰ ì§€ê¸ˆê¹Œì§€ ëª¨ë“  ì›ì†Œ ì¤‘ì—ì„œ ê°€ìž¥ í° ê°’ì„ ê°€ì§€ëŠ” ì›ì†Œë¥¼ ë¶ˆëŸ¬ì˜µë‹ˆë‹¤.
-	 str r3, [r1]			// ë¶ˆëŸ¬ì˜¨ ê°€ìž¥ í° ì›ì†Œë¥¼ Output_dataì˜ ë§ˆì§€ë§‰ ìœ„ì¹˜ì— ì €ìž¥í•©ë‹ˆë‹¤.
+	 str r3, [r1], #4    	// ÇöÀç ¼øÈ¸¸¦ ¹Ýº¹ÇÑ ¹è¿­¿¡¼­ °¡Àå ÀÛÀº °ªÀÎ r3¸¦ r1 ÁÖ¼Ò¿¡ ÀúÀåÇÏ°í, r1À» 4´õÇÑ °ªÀ¸·Î ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+	 subs r2, r2, #1		// r2¿¡ 1À» »« °ªÀ» r2¿¡ ³Ö°í, CPSRÀ» ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+	 bne Selection_sort_out_loop	// ¾ÆÁ÷ r2°¡ 0ÀÌ µÇÁö ¾Ê¾Ò´Ù¸é, out_loop¸¦ ´Ù½Ã ¹Ýº¹ÇÕ´Ï´Ù.
+	 ldr r3, [r0]			// ¸ðµç ¹Ýº¹ÀÌ ³¡³ª°í ÀÔ·Â ¹è¿­ÀÇ ¸¶Áö¸· ¿ø¼Ò, Áï Áö±Ý±îÁö ¸ðµç ¿ø¼Ò Áß¿¡¼­ °¡Àå Å« °ªÀ» °¡Áö´Â ¿ø¼Ò¸¦ ºÒ·¯¿É´Ï´Ù.
+	 str r3, [r1]			// ºÒ·¯¿Â °¡Àå Å« ¿ø¼Ò¸¦ Output_dataÀÇ ¸¶Áö¸· À§Ä¡¿¡ ÀúÀåÇÕ´Ï´Ù.
 
-forever:					// ì •ë ¬ì´ ëë‚˜ê³  í”„ë¡œê·¸ëž¨ì„ ì¢…ë£Œì‹œí‚¤ì§€ ì•Šê²Œ í•˜ëŠ” í•¨ìˆ˜ìž…ë‹ˆë‹¤.
-	nop						// ì•„ë¬´ í–‰ë™ë„ í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
-	b forever				// foreverì„ ê³„ì† ë°˜ë³µí•˜ê²Œ ë§Œë“­ë‹ˆë‹¤.
+forever:					// Á¤·ÄÀÌ ³¡³ª°í ÇÁ·Î±×·¥À» Á¾·á½ÃÅ°Áö ¾Ê°Ô ÇÏ´Â ÇÔ¼öÀÔ´Ï´Ù.
+	nop						// ¾Æ¹« Çàµ¿µµ ÇÏÁö ¾Ê½À´Ï´Ù.
+	b forever				// foreverÀ» °è¼Ó ¹Ýº¹ÇÏ°Ô ¸¸µì´Ï´Ù.
 
 .data
 .align 4
