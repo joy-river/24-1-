@@ -1,4 +1,3 @@
-#define csd_LED_ADDR 0x41200000
 #define csd_SWITCH_ADDR 0x41210000
 
 #include <stdint.h>
