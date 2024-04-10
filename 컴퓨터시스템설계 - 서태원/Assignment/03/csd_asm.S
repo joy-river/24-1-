@@ -5,27 +5,27 @@
 .global main
 
 main:
- 	ldr r0, =csd_LED_ADDR
-	ldr r1, =csd_SWITCH_ADDR
+ 	ldr r0, =csd_LED_ADDR		// r0�� LED�� �ּҸ� �����մϴ�.
+	ldr r1, =csd_SWITCH_ADDR	// r1�� ����ġ�� �ּҸ� �����մϴ�.
 
-Delay_loop:
+Delay_loop:						// ����ġ �Է��� �ް�, led ������ �����ϴ� �ݺ����Դϴ�.
 
-	ldr r3, [r1]
-	clz r3, r3
-	sub r3, r3, #23
- 	mov r2, #1
+	ldr r3, [r1]				// ����ġ �ּҿ��� ����ġ ���� �޾ƿɴϴ�.
+	clz r3, r3					// ���� ���� ����ġ ���� ã�� ���� clz�� ����߽��ϴ�.
+	sub r3, r3, #23				// ���� ��Ʈ 23���� �׻� 0�̹Ƿ� �� ������ �� �ݴϴ�.
+ 	mov r2, #1					// ù ��° led�� �����ϱ� ���� r2�� 1���� �ֽ��ϴ�.
 
-LED_loop:
- 	str r2, [r0]
- 	stmdb sp!, {r0-r3}
+LED_loop:						// led�� �����Ű�� �ݺ����Դϴ�.
+ 	str r2, [r0]				// r2�� ����� ���� led�� �����Ͽ� led�� �����մϴ�.
+ 	stmdb sp!, {r0-r3}			// �Լ� ȣ�� ���� ���ÿ� r0-r3 ���������� ���� �����մϴ�.
 
-	mov r0, r3
- 	bl csd_main
+	mov r0, r3					// csd_main �Լ��� �Ű������� �Ѱ��� r0�� ����ġ�� ���� �ֽ��ϴ�.
+ 	bl csd_main					// csd_main���� �б��մϴ�.
 
- 	ldmia sp!, {r0-r3}
- 	mov r2, r2, LSL #1
+ 	ldmia sp!, {r0-r3}			// ������ ���� �� ���ÿ��� r0-r3 ���������� ���� �ҷ��ɴ�
+ 	mov r2, r2, LSL #1			// ���� led�� �����ϱ� ���� LSL #1���� r2 ���� ������ŵ�ϴ�.
 
- 	cmp r2, #128
-	bgt Delay_loop
+ 	cmp r2, #128				// ���� r2���� 128(1000_0000)�� �Ѿ���� üũ�մϴ�.
+	bgt Delay_loop				// r2�� 128���� ũ�ٸ�, �ٽ� Delay_loop�� ���ư� �ݺ����� ó������ �ٽ� �����մϴ�.
 
- 	b LED_loop
+ 	b LED_loop					// r2�� 128���� �۴ٸ�, LED_loop�� ���� ���� led�� �����մϴ�.
