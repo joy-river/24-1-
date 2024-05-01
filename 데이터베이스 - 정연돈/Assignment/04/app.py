@@ -23,7 +23,6 @@ def print_table():
 
     return render_template("print_table.html", users=result)
 
-
 @app.route('/register', methods=['post'])
 def register():
     id = request.form["id"]
