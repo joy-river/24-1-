@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Review</title>
+</head>
+<body>
+    <h1>DB Term Project - Movie Review</h1>
+
+<form action="/register" method="post">
+    <label for="user_id">ID:</label><br>
+    <input id="user_id" type="text" name="id" value=""><br>
+
+    <label for="user_pwd">PASSWORD:</label><br>
+    <input id="user_pwd" type="password" name="password" value=""><br><br>
+
+    <input id="user_role" type="hidden" name="role" value='user'>
+
+    <input type="submit" name="send" value="login">
+    <input type="submit" name="send" value="sign up">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+            <p style='color: red; text-align: left'> {{ message }} </p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+</form>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, flash, redirect
 
 app = Flask(__name__)
 connect = psycopg2.connect("dbname=tutorial user=postgres password=postgres")
@@ -23,17 +23,26 @@ def print_table():
 
     return render_template("print_table.html", users=result)
 
-@app.route('/register', methods=['post'])
+
+@app.route('/register', methods=['get', 'post'])
 def register():
     id = request.form["id"]
     password = request.form["password"]
+    role = request.form["role"]
     send = request.form["send"]
+
+    if id == '':
+        flash("ID가 입력 되지 않았습니다. ID를 입력해주세요.", 'error')
+        return render_template("main.html")
+    if password == '':
+        flash("비밀번호가 입력 되지 않았습니다. 비밀번호를 입력해주세요.", 'error')
+        return render_template("main.html")
 
     cur.execute(f"select * from users where id = '{id}'")
     result = cur.fetchall()
     if send == 'sign up':
         if not result:
-            cur.execute(f"insert into users values ('{id}', '{password}')")
+            cur.execute(f"insert into users values ('{id}', '{password}', '{role}')")
             connect.commit()
             return id + " " + password + " " + send
         else:
@@ -42,9 +51,10 @@ def register():
         if not result or result[0][1] != password:
             return render_template("login_fail.html")
         else:
-            return render_template("login_success.html")
-
+            return render_template("movie.html")
 
 
 if __name__ == '__main__':
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
