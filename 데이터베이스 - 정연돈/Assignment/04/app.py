@@ -44,14 +44,17 @@ def register():
         if not result:
             cur.execute(f"insert into users values ('{id}', '{password}', '{role}')")
             connect.commit()
-            return id + " " + password + " " + send
+            flash("회원가입 성공! 가입하신 ID로 로그인 해주세요.", 'success')
         else:
-            return render_template("ID_collision.html")
+            flash("이미 가입되어 있는 ID 입니다.", 'error')
     else:
-        if not result or result[0][1] != password:
-            return render_template("login_fail.html")
+        if not result:
+            flash('가입되어있지 않은 ID 입니다. 먼저 회원가입을 진행해주세요.', 'error')
+        elif result[0][1] != password:
+            flash('비밀번호가 틀립니다. 다시 입력해주세요.', 'error')
         else:
             return render_template("movie.html")
+    return render_template('main.html')
 
 
 if __name__ == '__main__':

@@ -19,10 +19,14 @@
     <input type="submit" name="send" value="login">
     <input type="submit" name="send" value="sign up">
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories = true) %}
       {% if messages %}
-        {% for message in messages %}
-            <p style='color: red; text-align: left'> {{ message }} </p>
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <p style='color: red; text-align: left'> {{ message }} </p>
+            {% elif category == 'success' %}
+                <p style='color: green; text-align: left'>{{ message }}</p>
+            {% endif %}
         {% endfor %}
       {% endif %}
     {% endwith %}
