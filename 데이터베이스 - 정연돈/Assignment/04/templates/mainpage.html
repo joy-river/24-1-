@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Movies and Reviews</title>
+  </head>
+  <style>
+    .user {
+      background-color: Tomato;
+    }
+    .movie {
+      background-color: lightgreen;
+      width: 100%;
+    }
+    table {
+      width: 50%;
+      border: "1";
+    }
+  </style>
+
+  <body>
+    <div style="float: right">
+      User ID:
+      <button class="user">{{id}}</button>
+    </div>
+
+    <h1>Movies</h1>
+    <button>latest</button>
+    <button>genre</button>
+    <button>ratings</button>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>title</th>
+          <th>ratings</th>
+          <th>director</th>
+          <th>genre</th>
+          <th>release date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for movie in movies %}
+        <tr>
+          <th><button class="movie">{{movie[1]}}</button></th>
+          <th>None</th>
+          <th>{{movie[2]}}</th>
+          <th>{{movie[3]}}</th>
+          <th>{{movie[4]}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Reviews</h1>
+    <button>latest</button>
+    <button>title</button>
+    <button>followers</button>
+
+    <table border="1">
+      {% for review in reviews %}
+      <tr>
+        <th><button class="user">{{movie[1]}}</button></th>
+        <th>None</th>
+        <th>{{movie[2]}}</th>
+        <th>{{movie[3]}}</th>
+        <th>{{movie[4]}}</th>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

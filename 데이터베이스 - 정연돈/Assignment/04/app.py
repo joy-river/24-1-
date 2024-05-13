@@ -10,19 +10,11 @@ cur = connect.cursor()  # create cursor
 def main():
     return render_template("main.html")
 
-
-@app.route('/return', methods=['post'])
-def re_turn():
-    return render_template("main.html")
-
-
-@app.route('/print_table', methods=['post'])
-def print_table():
-    cur.execute("SELECT * FROM users;")
+@app.route('/main/<id>', methods=['get', 'post'])
+def mainpage(id):
+    cur.execute("select * from movies")
     result = cur.fetchall()
-
-    return render_template("print_table.html", users=result)
-
+    return render_template('mainpage.html', id=id, movies = result)
 
 @app.route('/register', methods=['get', 'post'])
 def register():
@@ -53,7 +45,7 @@ def register():
         elif result[0][1] != password:
             flash('비밀번호가 틀립니다. 다시 입력해주세요.', 'error')
         else:
-            return render_template("movie.html")
+            return redirect(url_for('mainpage', id=id))
     return render_template('main.html')
 
 
