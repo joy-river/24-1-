@@ -6,15 +6,35 @@ connect = psycopg2.connect("dbname=tutorial user=postgres password=postgres")
 cur = connect.cursor()  # create cursor
 
 
+def sel_movie(order):
+    if not order:
+        order = 'rel_date'
+    cur.execute(
+        f"select title, avg(ratings), director, genre, rel_date from movies left join reviews on id = mid group by title, director, genre, rel_date order by {order} desc")
+    return cur.fetchall()
+
+
+def sel_review(order='rev_time'):
+    cur.execute(
+        f"select ratings, uid, title, review text, rev_time from reviews, (select id, title from movies) where id = mid order by {order} desc")
+    return cur.fetchall()
+
+
 @app.route('/')
 def main():
     return render_template("main.html")
 
+
 @app.route('/main/<id>', methods=['get', 'post'])
 def mainpage(id):
-    cur.execute("select * from movies")
-    result = cur.fetchall()
-    return render_template('mainpage.html', id=id, movies = result)
+
+    mov_order = request.form.get('mov_order')
+
+    movies = sel_movie(mov_order)
+    reviews = sel_review()
+
+    return render_template('mainpage.html', id=id, movies=movies, reviews=reviews)
+
 
 @app.route('/register', methods=['get', 'post'])
 def register():
