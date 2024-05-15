@@ -222,6 +222,9 @@ def add_movie():
     send = request.form.get('send')
 
     if send:
+        if not title or not director or not rel_date:
+            flash('모든 칸이 입력되어야합니다.', category='error')
+            return redirect(url_for('user_info', uid=id))
         cur.execute(f"select max(id) "
                     f"from movies")
         result = int(cur.fetchone()[0])
@@ -230,6 +233,7 @@ def add_movie():
                     f" '{genre}', '{rel_date}')")
         connect.commit()
 
+    flash(f"'{title}'이 추가되었습니다.", category='success')
     return redirect(url_for('user_info', uid=id))
 
 
@@ -245,7 +249,7 @@ def delete_movie():
                 f"where id = '{mid}'")
     connect.commit()
 
-    flash(f"영화 id = '{mid}'와 리뷰가 삭제되었습니다.", category='success')
+    flash(f"id = {mid}번 영화와 리뷰가 삭제되었습니다.", category='delete')
     return redirect(url_for('user_info', uid=id))
 
 

@@ -150,6 +150,18 @@
             <input type="date" name="rel_date"> <br>
           <button name="send" value="add">Add</button>
         </form>
+        {% with messages = get_flashed_messages(with_categories = true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <p style='color: red; text-align: left'> {{ message }} </p>
+                 {% elif category == 'success' %}
+                    <p style='color: green; text-align: left'>{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
         <h2>[Delete Movie]</h2>
         <form action="/delete-movie" method="post">
             Movie to Delete:<br>
@@ -163,7 +175,9 @@
         {% with messages = get_flashed_messages(with_categories = true) %}
           {% if messages %}
             {% for category, message in messages %}
-                <p style='color: green; text-align: left'>{{ message }}</p>
+                {% if category == 'delete' %}
+                    <p style='color: green; text-align: left'>{{ message }}</p>
+                {% endif %}
             {% endfor %}
           {% endif %}
         {% endwith %}
