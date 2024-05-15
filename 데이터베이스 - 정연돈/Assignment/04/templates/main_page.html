@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Movies and Reviews</title>
+  </head>
+  <style>
+    .user {
+      background-color: Tomato;
+    }
+    .movie {
+      background-color: lightgreen;
+      width: 100%;
+    }
+    table {
+      width: 50%;
+      border: "1";
+    }
+  </style>
+
+  <body>
+    <div style="float: right">
+      <form action="/user/{{id}}" method="get">
+        User ID:
+        <button class="user">{{id}}</button>
+      </form>
+      <form action="/" method="get">
+        <button>logout</button>
+      </form>
+
+    </div>
+
+
+    <h1>Movies</h1>
+    <form action="/main" method="post">
+      <button name="mov_order" value="rel_date desc">latest</button>
+      <button name="mov_order" value="genre">genre</button>
+      <button name="mov_order" value="avg(ratings) desc">ratings</button>
+    </form>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>title</th>
+          <th>ratings</th>
+          <th>director</th>
+          <th>genre</th>
+          <th>release date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for movie in movies %}
+        <tr>
+            <th><form action="/movie/{{movie[0]}}" method="get">
+              <button class="movie">{{movie[1]}}</button>
+              </form>
+            </th>
+          {% if movie[2] %}
+          <th>{{movie[2]|round(1)}}</th>
+          {% else %}
+          <th>None</th>
+          {% endif %}
+          <th>{{movie[3]}}</th>
+          <th>{{movie[4]}}</th>
+          <th>{{movie[5]}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <form action="/random-movie" method="post">
+      Genre: <br>
+      <select name="genre" id="genre">
+        <option value="action" selected>action</option>
+        <option value="drama">drama</option>
+        <option value="fantasy">fantasy</option>
+        <option value="comedy">comedy</option>
+        <option value="horror">horror</option>
+      </select> <br>
+      <button>Give me Recommendation!</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p style='color: red; text-align: left'> {{ message }} </p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/main" method="post">
+    <h1>Reviews</h1>
+      <button name="rev_order" value="rev_time desc">latest</button>
+      <button name="rev_order" value="title">title</button>
+      <button name="rev_order" value="follow">reviews of the person you follow</button>
+    </form>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ratings</th>
+          <th>user</th>
+          <th>title</th>
+          <th>review</th>
+          <th>time</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for review in reviews %}
+        <tr>
+          <th>{{review[0]}}</th>
+          <th>
+            <form action="/user/{{review[1]}}" method="get">
+            <button class="user" >{{review[1]}}</button>
+            </form>
+          </th>
+          <th>
+            <form action="/movie/{{review[2]}}" method="get">
+            <button class="movie">{{review[3]}}</button>
+            </form>
+          </th>
+          <th>{{review[4]}}</th>
+          <th>{{review[5].strftime("%Y-%m-%d %H:%M")}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </body>
+</html>

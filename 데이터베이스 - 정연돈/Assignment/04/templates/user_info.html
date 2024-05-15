@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User info</title>
+</head>
+<style>
+    .user {
+      background-color: Tomato;
+    }
+    .movie {
+      background-color: lightgreen;
+      width: 100%;
+    }
+    table {
+      width: 50%;
+      border: "1";
+    }
+</style>
+
+<body>
+
+        <div style="float: right">
+
+          <form action="/user/{{id}}" method="get">
+             ID:
+            <button class="user">{{id}}</button>
+          </form>
+          <form action="/main" method="get">
+            <button value="">Main Page</button>
+          </form>
+        </div>
+
+    <h1>{{user[0]}}</h1>
+    {% if user[1] != 'admin' and id != user[0] %}
+    <form action="/follow-mute/{{user[0]}}" method="post">
+        <button name="act" value="follow">follow</button>
+        <button name="act" value="mute">mute</button>
+        <input type="hidden" name="back" value='{{user[0]}}'>
+    </form>
+    {% endif %}
+
+
+    <h2> [Reviews] </h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ratings</th>
+          <th>movies</th>
+          <th>reivew</th>
+          <th>time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for review in reviews %}
+            <tr>
+              <th>{{review[0]}}</th>
+              <th><form action="/movie/{{review[1]}}" method="get">
+                <button class="movie">{{review[2]}}</button>
+              </form>
+              </th>
+              <th>{{review[3]}}</th>
+              <th>{{review[4].strftime("%Y-%m-%d %H:%M")}}</th>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+    <h2>[Followers]</h2>
+
+    {% for follower in followers %}
+    <form action="/user/{{follower[0]}}" method="get">
+        <button class="user">{{follower[0]}}</button>
+    </form>
+    {% endfor %}
+        <hr>
+    {% if id == user[0] and user[1] != 'admin' %}
+
+        <h2>[Followed]</h2>
+            <table border="1" >
+                <thead>
+                  <tr>
+                    <th>user</th>
+                    <th>unfollow</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for fol_user in followed %}
+                      <tr>
+                        <th>
+                          <form action="/user/{{fol_user[0]}}" method="get">
+                            <button class="user">{{fol_user[0]}}</button>
+                          </form>
+                        </th>
+                        <th>
+                          <form action="/follow-mute/{{fol_user[0]}}" method="post">
+                            <button name="act" value="unfollow">unfollow</button>
+                            <input type="hidden" name="back" value='{{user[0]}}'>
+                          </form>
+                        </th>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        <h2>[Muted]</h2>
+            <table border="1">
+                <thead>
+                  <tr>
+                    <th>user</th>
+                    <th>unmute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for mut_user in muted %}
+                      <tr>
+                        <th>
+                          <form action="/user/{{mut_user[0]}}" method="get">
+                            <button class="user">{{mut_user[0]}}</button>
+                          </form>
+                        </th>
+                        <th>
+                          <form action="/follow-mute/{{mut_user[0]}}" method="post">
+                            <button name="act" value="unmute">unmute</button>
+                            <input type="hidden" name="back" value='{{user[0]}}'>
+                          </form>
+                        </th>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        <hr>
+    {% endif %}
+
+    {% if id == user[0] and user[1] == 'admin' %}
+        <h2>[Add Movie]</h2>
+        <form action="/add-movie" method="post">
+          Title: <br>
+            <input type="text" name="title" value=""> <br>
+          Director: <br>
+            <input type="text" name="director" value=""> <br>
+          Genre: <br>
+            <select name="genre" id="genre">
+              <option value="action" selected>action</option>
+              <option value="drama">drama</option>
+              <option value="fantasy">fantasy</option>
+              <option value="comedy">comedy</option>
+              <option value="horror">horror</option>
+            </select> <br>
+          Release Date:<br>
+            <input type="date" name="rel_date"> <br>
+          <button name="send" value="add">Add</button>
+        </form>
+        <h2>[Delete Movie]</h2>
+        <form action="/delete-movie" method="post">
+            Movie to Delete:<br>
+            <select name="del_movie" id="del_movie">
+                {% for movie in movies %}
+                    <option name=del_movie value="{{movie[0]}}">id: {{movie[0]}}, {{movie[1]}}</option>
+                {% endfor %}
+            </select>
+            <button name="send" value="delete">Delete!</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories = true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+                <p style='color: green; text-align: left'>{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    {% endif %}
+
+
+</body>
+</html>

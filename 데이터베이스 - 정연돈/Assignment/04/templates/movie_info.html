@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie info</title>
+</head>
+<style>
+    .user {
+      background-color: Tomato;
+    }
+    table {
+      width: 50%;
+      border: "1";
+    }
+</style>
+
+<body>
+    
+        <div style="float: right">
+          <form action="/user/{{id}}" method="get">
+            ID:
+            <button class="user">{{id}}</button>
+          </form>
+          <form action="/main" method="get">
+            <button value="">Main Page</button>
+          </form>
+        </div>
+        {% with messages = get_flashed_messages(with_categories = true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+                <p style='color: green; text-align: left'>{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <h1>{{movie[1]}}</h1>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>director</th>
+              <th>genre</th>
+              <th>release date</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <th>{{movie[3]}}</th>
+                <th>{{movie[4]}}</th>
+                <th>{{movie[5]}}</th>
+              </tr>
+          </tbody>
+        </table>
+
+      <hr>
+
+      <h2>[Reviews]</h2>
+
+      {% if movie[2] != None %}
+        <h3>Average Rating: {{movie[2]|round(1)}}</h3>
+      {% else %}
+        <h3>Average Rating: None</h3>
+      {% endif %}
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ratings</th>
+            <th>user</th>
+            <th>review</th>
+            <th>time</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for review in reviews %}
+            <tr>
+              <th>{{review[0]}}</th>
+              <th><form action="/user/{{review[1]}}" method="get">
+                <button class="user">{{review[1]}}</button>
+              </form>
+              </th>
+              <th>{{review[2]}}</th>
+              <th>{{review[3].strftime("%Y-%m-%d %H:%M")}}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <hr>
+    <form action="/update-review/{{movie[0]}}" method="post">
+      <h3>My Review:
+          <select name="rating" id="rating">
+            <option value="5" selected>5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+          </select>
+      </h3><br>
+      <input type="text" id="review" name="review" style= "width:500px; height:50px;"><br>
+      <input type="submit" value="update">
+    </form>
+
+</body>
+</html>
