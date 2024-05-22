@@ -11,6 +11,7 @@
 #include "threads/switch.h"
 #include "threads/synch.h"
 #include "threads/vaddr.h"
+#include "lib/kernel/list.h"
 #ifdef USERPROG
 #include "userprog/process.h"
 #endif
@@ -232,6 +233,15 @@ thread_block (void)
   schedule ();
 }
 
+/* Less Function for list_insert_ordered*/
+bool My_Less_Function(struct list_elem *l, struct list_elem *s, void **aux UNUSED){
+  struct thread *t1 = list_entry(l, struct thread, elem);
+  struct thread *t2 = list_entry(s, struct thread, elem);
+
+  return (t1->priority) > (t2->priority);
+}
+
+
 /* Transitions a blocked thread T to the ready-to-run state.
    This is an error if T is not blocked.  (Use thread_yield() to
    make the running thread ready.)
@@ -249,7 +259,8 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  list_push_back (&ready_list, &t->elem);
+  /*list_push_back (&ready_list, &t->elem); */
+  list_insert_ordered(&ready_list, &t->elem, &My_Less_Function, NULL);
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
