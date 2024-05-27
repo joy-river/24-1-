@@ -65,7 +65,8 @@ def register():
     result = cur.fetchall()
     if send == 'sign up':
         if not result:
-            cur.execute(f"insert into users values ('{id}', '{password}', '{role}')")
+            cur.execute(
+                f"insert into users values ('{id}', '{password}', '{role}')")
             connect.commit()
             flash("회원가입 성공! 가입하신 ID로 로그인 해주세요.", 'success')
         else:
@@ -126,7 +127,8 @@ def update_review(mid):
     ratings = request.form.get('rating')
     review = request.form.get('review')
 
-    cur.execute(f"select uid from reviews where uid = '{id}' and mid = '{mid}'")
+    cur.execute(
+        f"select uid from reviews where uid = '{id}' and mid = '{mid}'")
     result = cur.fetchone()
     if result:
         cur.execute(
