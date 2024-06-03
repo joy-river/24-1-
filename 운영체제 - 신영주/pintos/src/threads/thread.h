@@ -105,6 +105,10 @@ struct thread
 
 /* Less Function for list_insert_ordered*/
 bool My_Less_Function(struct list_elem *l, struct list_elem *s, void **aux UNUSED);
+
+/* Preemption Function for thread_create and set_priority*/
+void My_Preemption(void);
+
 /* If false (default), use round-robin scheduler.
    If true, use multi-level feedback queue scheduler.
    Controlled by kernel command-line option "-o mlfqs". */
