@@ -75,6 +75,34 @@ static void schedule (void);
 void thread_schedule_tail (struct thread *prev);
 static tid_t allocate_tid (void);
 
+/* Less Function for list_insert_ordered*/
+bool My_Less_Function(struct list_elem *l, struct list_elem *s, void **aux UNUSED){
+  /*Get thread from list*/
+  struct thread *t1 = list_entry(l, struct thread, elem);
+  struct thread *t2 = list_entry(s, struct thread, elem);
+
+  /*Return comparing of thread's priority*/
+  return (t1->priority) > (t2->priority);
+}
+
+/* Preemption Function for thread_create and set_priority*/
+void My_Preemption(void) {
+    /*Disable interrupt*/
+    enum intr_level old_level;
+    old_level = intr_disable();
+
+    /*Get current thread and thread of Highest priority*/
+    struct thread *cur = thread_current();
+    struct list_elem *next = list_begin(&ready_list);
+
+    /*If current thread has lower priority, then call thread_yield */
+    if (next != NULL && My_Less_Function(next, &cur->elem, NULL))
+        thread_yield();  
+
+    intr_set_level(old_level);
+}
+
+
 /* Initializes the threading system by transforming the code
    that's currently running into a thread.  This can't work in
    general and it is possible in this case only because loader.S
@@ -213,6 +241,7 @@ thread_create (const char *name, int priority,
 
   /* Add to run queue. */
   thread_unblock (t);
+  My_Preemption();
 
   return tid;
 }
@@ -233,13 +262,7 @@ thread_block (void)
   schedule ();
 }
 
-/* Less Function for list_insert_ordered*/
-bool My_Less_Function(struct list_elem *l, struct list_elem *s, void **aux UNUSED){
-  struct thread *t1 = list_entry(l, struct thread, elem);
-  struct thread *t2 = list_entry(s, struct thread, elem);
 
-  return (t1->priority) > (t2->priority);
-}
 
 
 /* Transitions a blocked thread T to the ready-to-run state.
@@ -330,8 +353,11 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  if (cur != idle_thread) 
+  if (cur != idle_thread)
+  /*
     list_push_back (&ready_list, &cur->elem);
+  */
+    list_insert_ordered(&ready_list, &cur->elem, &My_Less_Function, NULL);
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -400,6 +426,7 @@ void
 thread_set_priority (int new_priority) 
 {
   thread_current ()->priority = new_priority;
+  My_Preemption();
 }
 
 /* Returns the current thread's priority. */
