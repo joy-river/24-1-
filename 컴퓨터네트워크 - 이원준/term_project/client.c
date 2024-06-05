@@ -6,9 +6,9 @@
 
 #define BUFFER_SIZE 1024
 
-void send_command(int sock, const char *command) {
+void send_command(int sock, const char *input) {
     char buffer[BUFFER_SIZE];
-    send(sock, command, strlen(command), 0);
+    send(sock, input, strlen(input), 0);
     int bytes_read = recv(sock, buffer, BUFFER_SIZE - 1, 0);
     buffer[bytes_read] = '\0';
     printf("%s\n", buffer);
@@ -44,12 +44,16 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    char command[BUFFER_SIZE];
+    char input[BUFFER_SIZE];
+
     while (1) {
-        printf("Enter command: ");
-        if (fgets(command, BUFFER_SIZE, stdin) != NULL) {
-            command[strcspn(command, "\n")] = '\0';  // Remove the newline character
-            send_command(sock, command);
+        if (fgets(input, BUFFER_SIZE, stdin) != NULL) {
+            printf("%s", input);
+            if (strcmp(input, "EXIT") == 0){
+                printf("Goodbye!");
+                break;
+            }
+            send_command(sock, input);
         } else {
             printf("Error reading input.\n");
         }

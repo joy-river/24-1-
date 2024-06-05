@@ -7,22 +7,24 @@
 #include <errno.h>
 
 #define BUFFER_SIZE 1024
-#define MAX_CLIENTS 30
+#define MAX_KEY 10
 
 typedef struct {
     char key[1024];
     char value[1024];
 } KeyValue;
 
-KeyValue store[MAX_CLIENTS];
+KeyValue store[MAX_KEY];
 int store_size = 0;
 
-void process_command(int client_socket, char *command) {
+void server_func(int client_socket, char *input) {
     char response[BUFFER_SIZE] = {0};
-    char cmd[10], key[256], value[256];
-    sscanf(command, "%s %s %s", cmd, key, value);
+    char cmd[10], key[1024], value[1024];
+    sscanf(input, "%s %s %s", cmd, key, value);
 
-    if (strcmp(cmd, "GET") == 0) {
+    printf(input);
+
+    if (strcmp(cmd, "get") == 0 || strcmp(cmd, "GET") == 0) {
         int found = 0;
         for (int i = 0; i < store_size; i++) {
             if (strcmp(store[i].key, key) == 0) {
@@ -34,7 +36,7 @@ void process_command(int client_socket, char *command) {
         if (!found) {
             strcpy(response, "NULL");
         }
-    } else if (strcmp(cmd, "SET") == 0) {
+    } else if (strcmp(cmd, "set") == 0 || strcmp(cmd, "SET") == 0) {
         int found = 0;
         for (int i = 0; i < store_size; i++) {
             if (strcmp(store[i].key, key) == 0) {
@@ -43,31 +45,15 @@ void process_command(int client_socket, char *command) {
                 break;
             }
         }
-        if (!found && store_size < MAX_CLIENTS) {
+        if (!found && store_size < MAX_KEY) {
             strcpy(store[store_size].key, key);
             strcpy(store[store_size].value, value);
             store_size++;
         }
         strcpy(response, "OK");
-    } else if (strcmp(cmd, "DELETE") == 0) {
-        int found = 0;
-        for (int i = 0; i < store_size; i++) {
-            if (strcmp(store[i].key, key) == 0) {
-                for (int j = i; j < store_size - 1; j++) {
-                    store[j] = store[j + 1];
-                }
-                store_size--;
-                found = 1;
-                break;
-            }
-        }
-        if (found) {
-            strcpy(response, "OK");
-        } else {
-            strcpy(response, "ERROR: Key not found");
-        }
-    } else {
-        strcpy(response, "ERROR: Invalid command");
+    }
+    else {
+        strcpy(response, "ERROR: Invalid input");
     }
 
     send(client_socket, response, strlen(response), 0);
@@ -81,7 +67,7 @@ int main(int argc, char *argv[]) {
 
     int port = atoi(argv[1]);
     int server_fd, client_socket, max_sd, activity, new_socket, addrlen;
-    int client_sockets[MAX_CLIENTS] = {0};
+    int client_sockets[MAX_KEY] = {0};
     struct sockaddr_in address;
     char buffer[BUFFER_SIZE];
 
@@ -116,7 +102,7 @@ int main(int argc, char *argv[]) {
         FD_SET(server_fd, &readfds);
         max_sd = server_fd;
 
-        for (int i = 0; i < MAX_CLIENTS; i++) {
+        for (int i = 0; i < MAX_KEY; i++) {
             client_socket = client_sockets[i];
             if (client_socket > 0) {
                 FD_SET(client_socket, &readfds);
@@ -140,7 +126,7 @@ int main(int argc, char *argv[]) {
 
             printf("New connection, socket fd is %d, ip is : %s, port : %d\n", new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 
-            for (int i = 0; i < MAX_CLIENTS; i++) {
+            for (int i = 0; i < MAX_KEY; i++) {
                 if (client_sockets[i] == 0) {
                     client_sockets[i] = new_socket;
                     printf("Adding to list of sockets as %d\n", i);
@@ -149,7 +135,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        for (int i = 0; i < MAX_CLIENTS; i++) {
+        for (int i = 0; i < MAX_KEY; i++) {
             client_socket = client_sockets[i];
 
             if (FD_ISSET(client_socket, &readfds)) {
@@ -161,7 +147,7 @@ int main(int argc, char *argv[]) {
                     client_sockets[i] = 0;
                 } else {
                     buffer[valread] = '\0';
-                    process_command(client_socket, buffer);
+                    server_func(client_socket, buffer);
                 }
             }
         }
