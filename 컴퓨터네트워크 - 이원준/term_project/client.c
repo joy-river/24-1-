@@ -61,11 +61,11 @@ int main(int argc, char *argv[]) {
     char input[BUFFER_SIZE];
 
 
+    printf("입력 대기중...\n");    
     while (1) {
-        printf("입력 대기중...\n");
         if (fgets(input, BUFFER_SIZE, stdin) != NULL) {
             if (strncmp(input, "EXIT", 4) == 0){
-                printf("Goodbye.");
+                printf("Goodbye.\n");
                 break;
             }
             if (send_command(sock, input) < 0)

@@ -12,8 +12,8 @@
 #define MAX_CLIENT 10
 
 typedef struct {
-    char key[1024];
-    char value[1024];
+    char key[STRING_SIZE];
+    char value[STRING_SIZE];
 } Key_Value;
 
 Key_Value store[MAX_KEY];
@@ -28,7 +28,7 @@ void handle_sigint(int sig) {
 
 void server_func(int client_socket, char *input) {
     char buffer[STRING_SIZE] = {0};
-    char cmd[10], key[1024], value[1024];
+    char cmd[10], key[STRING_SIZE], value[STRING_SIZE];
     int parsed_items = sscanf(input, "%s %s %s", cmd, key, value);
 
     if (parsed_items < 1) {
@@ -46,7 +46,7 @@ void server_func(int client_socket, char *input) {
                 }
             }
             if (!found) {
-                strcpy(buffer, "-ERR: 해당되는 Key가 없습니다.");
+                strcpy(buffer, "$-1");
             }
         }
     } 
@@ -71,7 +71,7 @@ void server_func(int client_socket, char *input) {
         }
     }
     else if (strcmp(cmd, "EXIT") == 0){
-        strcpy(buffer, "");
+        strcpy(buffer, "-ERR: 서버가 종료되었습니다.");
     }
     else {
         strcpy(buffer, "-ERR: 유효하지 않은 입력입니다.");
@@ -96,13 +96,13 @@ int main(int argc, char *argv[]) {
     }
 
     int port = atoi(argv[1]);
-    int server_socket, client_socket, max_sd, sd, activity, new_socket, addrlen;
+    int server_socket, client_socket, max_sd, sd, new_socket, addrlen;
 
     int client_sockets[MAX_CLIENT] = {0};
     struct sockaddr_in address;
     char buffer[STRING_SIZE];
 
-    fd_set readfds;
+    fd_set reads;
     struct timeval timeout;
 
     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -128,27 +128,26 @@ int main(int argc, char *argv[]) {
 
     addrlen = sizeof(address);
     printf("포트번호 %d 에서 listen 중입니다...\n", port);
-
+    
     while (!stop) {
-        FD_ZERO(&readfds);
-        FD_SET(server_socket, &readfds);
+        FD_ZERO(&reads);
+        FD_SET(server_socket, &reads);
         max_sd = server_socket;
 
         for (int i = 0; i < MAX_CLIENT; i++) {
             client_socket = client_sockets[i];
             if (client_socket > 0) {
-                FD_SET(client_socket, &readfds);
+                FD_SET(client_socket, &reads);
             }
             if (client_socket > max_sd) {
                 max_sd = client_socket;
             }
         }
-
-        timeout.tv_sec = 1;
         
-        activity = select(max_sd + 1, &readfds, NULL, NULL, &timeout);
+        timeout.tv_sec = 1;
+        timeout.tv_usec = 0;
 
-        if ((activity < 0) && (errno != EINTR)) {
+        if (select(max_sd + 1, &reads, NULL, NULL, &timeout) < 0 && (errno != EINTR)){
             perror("Select 오류");
             break;
         }
@@ -157,7 +156,7 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        if (FD_ISSET(server_socket, &readfds)) {
+        if (FD_ISSET(server_socket, &reads)) {
             while ((new_socket = accept(server_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
                 if (errno == EINTR) {
                     if (stop) break;
@@ -186,7 +185,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < MAX_CLIENT; i++) {
             client_socket = client_sockets[i];
 
-            if (FD_ISSET(client_socket, &readfds)) {
+            if (FD_ISSET(client_socket, &reads)) {
                 int client_act;
                 if ((client_act = read(client_socket, buffer, STRING_SIZE)) == 0) {
                     getpeername(client_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
