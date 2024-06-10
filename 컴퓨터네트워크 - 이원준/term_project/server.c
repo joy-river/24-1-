@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     fd_set reads;
     struct timeval timeout;
 
-    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("소켓 생성 실패");
         return -1;
     }
