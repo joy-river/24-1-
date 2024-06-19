@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    if (listen(server_socket, 3) < 0) {
+    if (listen(server_socket, 11) < 0) {
         perror("Listen 실패");
         close(server_socket);
         return -1;
