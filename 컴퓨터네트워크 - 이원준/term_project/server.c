@@ -11,6 +11,7 @@
 #define MAX_KEY 10
 #define MAX_CLIENT 10
 
+
 typedef struct {
     char key[STRING_SIZE];
     char value[STRING_SIZE];
